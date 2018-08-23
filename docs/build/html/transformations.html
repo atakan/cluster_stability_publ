@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Transformations between 3D and 1D systems &#8212; Cluster Stability  documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="About this document" href="about.html" />
+    <link rel="prev" title="Welcome to Cluster Stability’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="transformations-between-3d-and-1d-systems">
+<h1>Transformations between 3D and 1D systems<a class="headerlink" href="#transformations-between-3d-and-1d-systems" title="Permalink to this headline">¶</a></h1>
+<p>When we construct the initial conditions for a cluster simulation, we
+have the choice of having a 3D or a 1D representation, if the
+distribution function is spherically symmetric. Note that this does not
+exclude anistropy; but if the distribution function is only a function
+of energy <span class="math">\(E\)</span>, then the system is also isotropic.</p>
+<p>The 3D representation is familiar. Position and velocity are given by
+six numbers in Cartesian coordinates</p>
+<div class="math">
+\[\vec{r} = (x, y, z)\,,\quad \vec{v} = (v_x, v_y, v_z)\,.\]</div>
+<p>In 1D representation the position is given by a single number</p>
+<div class="math">
+\[r = |\vec{r}| = \sqrt{x^2 + y^2 + z^2}\]</div>
+<p>whereas the velocity has two components, radial and transverse</p>
+<div class="math">
+\[v_r = \vec{v}\cdot\vec{r} / \|\vec{v}\|\,,\quad
+v_t = \sqrt{\vec{v}\cdot\vec{v} - v_r^2}\,.\]</div>
+<p>One way to visualize this is to think about concentric spherical shells
+that contract and expand.</p>
+<p>We can also obtain Cartesian coordinates and velocities from <span class="math">\(r\)</span>, <span class="math">\(v_r\)</span>
+and <span class="math">\(v_t\)</span>. First, we have to choose a position for our star. This
+involves randomizing two angles, the polar angle <span class="math">\(\theta\)</span> and the
+azimuthal angle <span class="math">\(\varphi\)</span>. The volume element in 3D spherical
+coordinates imply that <span class="math">\(\varphi\)</span> should be distributed uniformly in the
+interval <span class="math">\([0, 2\pi)\)</span> (or <span class="math">\([-\pi, pi)\)</span> or something like that, it does
+not make a difference) and <span class="math">\(\cos\theta\)</span> should be distributed in
+<span class="math">\([-1, 1]\)</span> interval. We generate two independently distributed random
+numbers uniform in the unit interval <span class="math">\(X_1\)</span> and <span class="math">\(X_2\)</span> and obtain</p>
+<div class="math">
+\[\phi = 2\pi X_1\,,
+\qquad \cos\theta = 2X_2-1\,,
+\quad \sin\theta = \sqrt{1-\cos^2\theta}\]</div>
+<p>For the velocities, start by assuming the star is on the <span class="math">\(z\)</span>-axis.
+Radial component of the velocity will be along <span class="math">\(z\)</span>-axis, and the
+transverse component will be in a random direction perpendicular to
+<span class="math">\(z\)</span>-axis.</p>
+<div class="math">
+\[v_z' = \pm v_r\,, v_x' = v_t \sin\alpha\,, v_y' = v_t \cos\alpha\,.\]</div>
+<p>where <span class="math">\(\alpha\)</span> is a random angle in the interval <span class="math">\([0, 2\pi)\)</span> and the
+sign of <span class="math">\(v_z\)</span> is determined randomly. We then rotate this vector by angle
+<span class="math">\(\theta\)</span> around <span class="math">\(y\)</span>-axis and then by angle <span class="math">\(\varphi\)</span> around <span class="math">\(z\)</span>-axis. This gives</p>
+<div class="math">
+\[\begin{split}\begin{split}
+\left(\begin{matrix} v_x\\v_y\\v_z\end{matrix}\right) &amp;=
+\left(\begin{matrix} \cos\varphi &amp; -\sin\varphi &amp; 0 \\
+                     \sin\varphi &amp; \cos\varphi &amp; 0 \\
+                     0 &amp; 0 &amp; 1\end{matrix}\right)
+\left(\begin{matrix} \cos\theta &amp; 0 &amp;  \sin\theta \\
+                     0 &amp; 1 &amp; 0 \\
+                     -\sin\theta &amp; 0 &amp; \cos\theta  \end{matrix}\right)
+\left(\begin{matrix} v_x' \\ v_y' \\ v_z'\end{matrix}\right)\\
+&amp; = \left(\begin{matrix}
+            \sin\varphi[\cos\theta\cos\alpha \,v_t \pm \sin\theta \,v_r]
+                    - \sin\varphi \sin\alpha \,v_t \\
+            \cos\varphi[\cos\theta\cos\alpha \,v_t \pm \sin\theta \,v_r]
+                    + \cos\varphi \sin\alpha \,v_t \\
+            -\sin\theta\cos\alpha\,v_t \pm \cos\theta\,v_r
+          \end{matrix}\right)
+\end{split}\end{split}\]</div>
+<p>These formulas can be verified by calculating
+<span class="math">\(\vec{v}\cdot\vec{v} = v_t^2 + v_r^2\)</span> and
+<span class="math">\(\vec{v}\cdot\vec{r} = v_r r\)</span>.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Cluster Stability&#8217;s documentation!</a></li>
+      <li>Next: <a href="about.html" title="next chapter">About this document</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/transformations.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Çağrı Erciyes, M. Atakan Gürkan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/transformations.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

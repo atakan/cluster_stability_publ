@@ -1,0 +1,8 @@
+MAG
+===
+
+1. Extend Star class with methods 3d->1d and 1d->3d conversion.
+2. Use GSL for random number generation.
+
+ÇE
+==
